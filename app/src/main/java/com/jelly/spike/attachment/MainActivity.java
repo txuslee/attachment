@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.GridView;
 
 import com.jelly.spike.attachment.adapter.IconAdapter;
+import com.jelly.spike.attachment.listener.animator.SimpleAnimatorListener;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -84,22 +85,10 @@ public class MainActivity extends ActionBarActivity {
     private void hideAttachmentActions() {
         int height = this.attachmentActionsGridView.getHeight();
         final ValueAnimator animator = slideAnimator(height, 0);
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
+        animator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animator) {
                 hide(attachmentActionsGridView);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
             }
         });
         animator.start();
