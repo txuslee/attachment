@@ -84,16 +84,16 @@ public class MainActivity extends ActionBarActivity {
 
     @OnClick(R.id.btn_attachFile)
     public void onAttachmentClick(final View view) {
-        if (isAttachmentActionShown) {
-            hideAttachmentActions();
+        if (this.isAttachmentActionShown) {
+            this.hideAttachmentActions();
         } else {
-            revealAttachmentActions();
+            this.revealAttachmentActions();
         }
-        isAttachmentActionShown = !isAttachmentActionShown;
+        this.isAttachmentActionShown = !this.isAttachmentActionShown;
     }
 
     private void hideAttachmentActions() {
-        int height = this.attachmentActionsGridView.getHeight();
+        final int height = this.attachmentActionsGridView.getHeight();
         final ValueAnimator animator = slideAnimator(height, 0);
         animator.addListener(new SimpleAnimatorListener() {
             @Override
@@ -129,14 +129,14 @@ public class MainActivity extends ActionBarActivity {
         return animator;
     }
 
-    private void hide(View view) {
+    private void hide(final View view) {
         if (view == null) {
             return;
         }
         view.setVisibility(View.GONE);
     }
 
-    private void reveal(View view) {
+    private void reveal(final View view) {
         if (view == null) {
             return;
         }

@@ -102,7 +102,7 @@ public class IconGridView extends GridView {
         return this.verticalSpacing;
     }
 
-    public void removeOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener layoutListener) {
+    public void removeOnGlobalLayoutListener(final ViewTreeObserver.OnGlobalLayoutListener layoutListener) {
         final ViewTreeObserver observer = this.getViewTreeObserver();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             observer.removeGlobalOnLayoutListener(layoutListener);
