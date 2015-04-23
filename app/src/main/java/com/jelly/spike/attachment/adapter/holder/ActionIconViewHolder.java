@@ -15,7 +15,7 @@ import com.jelly.spike.attachment.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class IconViewHolder {
+public class ActionIconViewHolder {
 
     private static int CurrentColorIndex = 0;
 
@@ -28,21 +28,21 @@ public class IconViewHolder {
             android.R.color.darker_gray,
     };
 
-    @InjectView(R.id.chat_imv_attach_action_image)
+    @InjectView(R.id.chat_imv_action_image)
     public ImageView image;
     public View root;
 
-    private IconViewHolder(final ViewGroup parent) {
-        this.root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_attach_action, parent, false);
+    private ActionIconViewHolder(final ViewGroup parent) {
+        this.root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_action, parent, false);
         ButterKnife.inject(this, root);
         this.root.setTag(this);
     }
 
-    public static IconViewHolder get(final View convertView, final ViewGroup parent) {
+    public static ActionIconViewHolder get(final View convertView, final ViewGroup parent) {
         if (convertView == null) {
-            return new IconViewHolder(parent);
+            return new ActionIconViewHolder(parent);
         }
-        return (IconViewHolder) convertView.getTag();
+        return (ActionIconViewHolder) convertView.getTag();
     }
 
     public void setIconResourceDimension(@DrawableRes int iconResource, @DimenRes int iconSize) {

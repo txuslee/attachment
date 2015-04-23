@@ -30,7 +30,7 @@
             android:src="@drawable/ic_editor_attach_file" />
     </LinearLayout>
 
-    <com.jelly.spike.attachment.view.IconGridView
+    <com.jelly.spike.attachment.view.ActionIconGridView
         android:id="@+id/lyt_attach_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

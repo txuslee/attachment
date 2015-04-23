@@ -8,9 +8,9 @@ import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
 import android.widget.GridView;
 
-import com.jelly.spike.attachment.adapter.IconAdapter;
+import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
 
-public class IconGridView extends GridView {
+public class ActionIconGridView extends GridView {
 
     private static final int DEFAULT_SPACING = 0;
 
@@ -25,22 +25,22 @@ public class IconGridView extends GridView {
     private int verticalSpacing;
     private int columnCount;
 
-    public IconGridView(final Context context) {
+    public ActionIconGridView(final Context context) {
         super(context);
     }
 
-    public IconGridView(final Context context, final AttributeSet attrs) {
+    public ActionIconGridView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.initialize(attrs);
     }
 
-    public IconGridView(final Context context, final AttributeSet attrs, int defStyleAttr) {
+    public ActionIconGridView(final Context context, final AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.initialize(attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public IconGridView(final Context context, final AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ActionIconGridView(final Context context, final AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.initialize(attrs);
     }
@@ -73,7 +73,7 @@ public class IconGridView extends GridView {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        final IconAdapter adapter = (IconAdapter) this.getAdapter();
+        final RowDependentIconAdapter adapter = (RowDependentIconAdapter) this.getAdapter();
         if (adapter != null) {
             final int rowCount = adapter.getRowCount();
             // Changed (false) means original size in layout editor
@@ -86,7 +86,7 @@ public class IconGridView extends GridView {
         }
     }
 
-    private void updateIconDimensionPixelSize(final IconAdapter adapter) {
+    private void updateIconDimensionPixelSize(final RowDependentIconAdapter adapter) {
         final int iconWidth = (this.getWidth() / this.columnCount) - this.horizontalSpacing;
         final int iconHeight = (this.getHeight() / adapter.getRowCount()) - this.verticalSpacing;
         adapter.setIconDimensionPixelSize(Math.min(iconWidth, iconHeight));

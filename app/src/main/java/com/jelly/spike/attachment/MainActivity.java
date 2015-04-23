@@ -11,9 +11,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
-import com.jelly.spike.attachment.adapter.IconAdapter;
+import com.jelly.spike.attachment.adapter.impl.AttachmentIconAdapter;
+import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
 import com.jelly.spike.attachment.listener.animator.SimpleAnimatorListener;
-import com.jelly.spike.attachment.view.IconGridView;
+import com.jelly.spike.attachment.view.ActionIconGridView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @InjectView(R.id.lyt_attach_action)
-    protected IconGridView attachmentActionsGridView;
+    protected ActionIconGridView attachmentActionsGridView;
 
     private boolean isAttachmentActionShown = false;
 
@@ -36,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
         ButterKnife.inject(this);
 
         // Number of columns has not been set yet until onStart
-        final IconAdapter adapter = new IconAdapter(this, 2);
+        final RowDependentIconAdapter adapter = new RowDependentIconAdapter(new AttachmentIconAdapter(this), 2);
         this.attachmentActionsGridView.setAdapter(adapter);
         this.attachmentActionsGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override

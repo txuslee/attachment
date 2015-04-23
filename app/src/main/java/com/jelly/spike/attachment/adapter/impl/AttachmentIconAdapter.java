@@ -1,26 +1,23 @@
-package com.jelly.spike.attachment.adapter;
+package com.jelly.spike.attachment.adapter.impl;
 
 import android.content.Context;
-import android.support.annotation.DimenRes;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.jelly.spike.attachment.R;
-import com.jelly.spike.attachment.adapter.holder.IconViewHolder;
+import com.jelly.spike.attachment.adapter.ActionIconAdapter;
+import com.jelly.spike.attachment.adapter.holder.ActionIconViewHolder;
 import com.jelly.spike.attachment.adapter.model.AttachmentActionType;
 
-
-public class IconAdapter extends BaseAdapter {
+public class AttachmentIconAdapter extends BaseAdapter implements ActionIconAdapter {
 
     private final Context context;
-    private final int rows;
     private int iconDimensionPixelSize;
 
-    public IconAdapter(final Context context, int rows) {
+    public AttachmentIconAdapter(final Context context) {
         this.iconDimensionPixelSize = context.getResources().getDimensionPixelSize(R.dimen.button_attachment_action_icons_size);
         this.context = context;
-        this.rows = rows;
     }
 
     @Override
@@ -40,30 +37,24 @@ public class IconAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, final View convertView, final ViewGroup parent) {
-        final IconViewHolder vh = IconViewHolder.get(convertView, parent);
+        final ActionIconViewHolder vh = ActionIconViewHolder.get(convertView, parent);
         final AttachmentActionType type = (AttachmentActionType) this.getItem(position);
-        vh.setIconResourcePixelSize(type.getResourceId(), this.iconDimensionPixelSize);
+        vh.setIconResourcePixelSize(type.getResourceId(), this.getIconDimensionPixelSize());
         return vh.root;
     }
 
-    @DimenRes
-    private int getIconDimensionId() {
-        return R.dimen.button_attachment_action_icons_size;
-    }
-
+    @Override
     public int getIconDimensionPixelSize() {
         return this.iconDimensionPixelSize;
     }
 
-    public void setIconDimensionPixelSize(int dimensionPixelSize) {
+    @Override
+    public boolean setIconDimensionPixelSize(int dimensionPixelSize) {
         // Avoid refresh loop
         if (this.iconDimensionPixelSize != dimensionPixelSize) {
             this.iconDimensionPixelSize = dimensionPixelSize;
-            this.notifyDataSetChanged();
+            return true;
         }
-    }
-
-    public int getRowCount() {
-        return this.rows;
+        return false;
     }
 }
