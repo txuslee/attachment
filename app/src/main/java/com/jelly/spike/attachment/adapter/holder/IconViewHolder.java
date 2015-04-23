@@ -53,7 +53,7 @@ public class IconViewHolder {
 
     public void setIconResourcePixelSize(@DrawableRes int iconResource, int size) {
         this.root.setLayoutParams(new FrameLayout.LayoutParams(size, size));
-        this.root.setBackgroundColor(this.getNextColor());
+        //this.root.setBackgroundColor(this.getNextColor());
         this.image.setImageResource(iconResource);
     }
 

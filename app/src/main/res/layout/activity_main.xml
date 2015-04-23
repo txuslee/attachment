@@ -42,7 +42,6 @@
         android:padding="8dp"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp"
-        android:visibility="gone" />
+        android:verticalSpacing="5dp" />
 
 </LinearLayout>

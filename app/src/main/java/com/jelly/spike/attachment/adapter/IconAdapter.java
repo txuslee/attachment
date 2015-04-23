@@ -14,14 +14,12 @@ import com.jelly.spike.attachment.adapter.model.AttachmentActionType;
 public class IconAdapter extends BaseAdapter {
 
     private final Context context;
-    private final int columns;
     private final int rows;
     private int iconDimensionPixelSize;
 
-    public IconAdapter(final Context context, int columns, int rows) {
+    public IconAdapter(final Context context, int rows) {
         this.iconDimensionPixelSize = context.getResources().getDimensionPixelSize(R.dimen.button_attachment_action_icons_size);
         this.context = context;
-        this.columns = columns;
         this.rows = rows;
     }
 
@@ -63,10 +61,6 @@ public class IconAdapter extends BaseAdapter {
             this.iconDimensionPixelSize = dimensionPixelSize;
             this.notifyDataSetChanged();
         }
-    }
-
-    public int getColumnCount() {
-        return this.columns;
     }
 
     public int getRowCount() {

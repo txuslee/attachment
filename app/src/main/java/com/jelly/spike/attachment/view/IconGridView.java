@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.ViewTreeObserver;
 import android.widget.GridView;
 
 import com.jelly.spike.attachment.adapter.IconAdapter;
@@ -16,12 +17,13 @@ public class IconGridView extends GridView {
     private static int[] Attributes = {
             android.R.attr.horizontalSpacing,
             android.R.attr.verticalSpacing,
-            android.R.attr.padding,
+            android.R.attr.numColumns,
     };
 
+    private boolean forcedLayout;
     private int horizontalSpacing;
     private int verticalSpacing;
-    private int padding;
+    private int columnCount;
 
     public IconGridView(final Context context) {
         super(context);
@@ -49,6 +51,8 @@ public class IconGridView extends GridView {
             // Ignore API 15 restrictions
             this.horizontalSpacing = typedArray.getDimensionPixelSize(0, DEFAULT_SPACING);
             this.verticalSpacing = typedArray.getDimensionPixelSize(1, DEFAULT_SPACING);
+            this.columnCount = typedArray.getInteger(2, GridView.AUTO_FIT);
+            this.forcedLayout = true;
         } finally {
             typedArray.recycle();
         }
@@ -66,17 +70,44 @@ public class IconGridView extends GridView {
     }
 
     @Override
-    public void onGlobalLayout() {
-        super.onGlobalLayout();
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
 
         final IconAdapter adapter = (IconAdapter) this.getAdapter();
-        final int columnCount = adapter.getColumnCount();
-        final int rowCount = adapter.getRowCount();
+        if (adapter != null) {
+            final int rowCount = adapter.getRowCount();
+            // Changed (false) means original size in layout editor
+            if (!changed && this.columnCount != GridView.AUTO_FIT) {
+                this.updateIconDimensionPixelSize(adapter);
+            } else if (this.forcedLayout) {
+                this.updateIconDimensionPixelSize(adapter);
+                this.forcedLayout = false;
+            }
+        }
+    }
 
-        if (columnCount != GridView.AUTO_FIT) {
-            final int iconWidth = (this.getWidth() / columnCount) - this.horizontalSpacing;
-            final int iconHeight = (this.getHeight() / rowCount) - this.verticalSpacing;
-            adapter.setIconDimensionPixelSize(Math.min(iconWidth, iconHeight));
+    private void updateIconDimensionPixelSize(final IconAdapter adapter) {
+        final int iconWidth = (this.getWidth() / this.columnCount) - this.horizontalSpacing;
+        final int iconHeight = (this.getHeight() / adapter.getRowCount()) - this.verticalSpacing;
+        adapter.setIconDimensionPixelSize(Math.min(iconWidth, iconHeight));
+    }
+
+    @Override
+    public int getHorizontalSpacing() {
+        return this.horizontalSpacing;
+    }
+
+    @Override
+    public int getVerticalSpacing() {
+        return this.verticalSpacing;
+    }
+
+    public void removeOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener layoutListener) {
+        final ViewTreeObserver observer = this.getViewTreeObserver();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            observer.removeGlobalOnLayoutListener(layoutListener);
+        } else {
+            observer.removeOnGlobalLayoutListener(layoutListener);
         }
     }
 }

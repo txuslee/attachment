@@ -8,11 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.GridView;
 
 import com.jelly.spike.attachment.adapter.IconAdapter;
 import com.jelly.spike.attachment.listener.animator.SimpleAnimatorListener;
+import com.jelly.spike.attachment.view.IconGridView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @InjectView(R.id.lyt_attach_action)
-    protected GridView attachmentActionsGridView;
+    protected IconGridView attachmentActionsGridView;
 
     private boolean isAttachmentActionShown = false;
 
@@ -34,10 +35,19 @@ public class MainActivity extends ActionBarActivity {
         this.setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        final IconAdapter adapter = new IconAdapter(this, attachmentActionsGridView.getNumColumns(), 2);
+        // Number of columns has not been set yet until onStart
+        final IconAdapter adapter = new IconAdapter(this, 2);
         this.attachmentActionsGridView.setAdapter(adapter);
+        this.attachmentActionsGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Remove layout listener before any other layout action is taken
+                attachmentActionsGridView.removeOnGlobalLayoutListener(this);
+                // Hide it here instead of doing it in layout file to force layout calculation on load
+                hide(attachmentActionsGridView);
+            }
+        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
