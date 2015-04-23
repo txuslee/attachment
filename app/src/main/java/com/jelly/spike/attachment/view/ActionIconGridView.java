@@ -77,9 +77,7 @@ public class ActionIconGridView extends GridView {
         if (adapter != null) {
             final int rowCount = adapter.getRowCount();
             // Changed (false) means original size in layout editor
-            if (!changed && this.columnCount != GridView.AUTO_FIT) {
-                this.updateIconDimensionPixelSize(adapter);
-            } else if (this.forcedLayout) {
+            if (this.forcedLayout) {
                 this.updateIconDimensionPixelSize(adapter);
                 this.forcedLayout = false;
             }
