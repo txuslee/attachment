@@ -1,7 +1,9 @@
 package com.jelly.spike.attachment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,11 +13,16 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.jelly.spike.attachment.adapter.impl.AttachmentIconAdapter;
 import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
 import com.jelly.spike.attachment.adapter.model.AttachmentActionType;
+import com.jelly.spike.attachment.input.SoftInputResultReceiver;
 import com.jelly.spike.attachment.view.ActionIconGridView;
 
 import butterknife.ButterKnife;
@@ -30,6 +37,13 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @InjectView(R.id.lyt_attach_action)
     protected ActionIconGridView attachmentActionsGridView;
 
+    @InjectView(R.id.input_text)
+    protected EditText inputText;
+
+    @InjectView(R.id.main_lyt_input)
+    protected LinearLayout inputLayout;
+
+    private SoftInputResultReceiver softInputResultReceiver;
     private boolean isAttachmentActionShown = false;
 
     public static void expand(final View v) {
@@ -102,6 +116,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 hide(attachmentActionsGridView);
             }
         });
+
+        this.softInputResultReceiver = new SoftInputResultReceiver(this.getWindow().getDecorView().getHandler());
     }
 
     @Override
@@ -130,21 +146,65 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     protected void onStart() {
         super.onStart();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        this.inputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View view, boolean hasFocus) {
+                final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(inputText.getWindowToken(), 0);
+                //onInputTextClick(inputText);
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(inputText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, this.softInputResultReceiver);
     }
 
     @OnClick(R.id.btn_attachFile)
     public void onAttachmentClick(final View view) {
-        if (this.isAttachmentActionShown) {
-            this.attachmentActionsGridView.collapse();
-        } else {
-            this.attachmentActionsGridView.expand();
+        if (this.softInputResultReceiver.isSoftInputShown()) {
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(inputText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, this.softInputResultReceiver);
         }
+
+//        if (this.isAttachmentActionShown) {
+//            this.attachmentActionsGridView.collapse();
+//        } else {
+//            this.attachmentActionsGridView.expand();
+//        }
         this.isAttachmentActionShown = !this.isAttachmentActionShown;
+    }
+
+    @OnClick(R.id.btn_send)
+    public void onSendClick(final View view) {
+        if (!TextUtils.isEmpty(this.inputText.getText())) {
+            //Send Message
+            //chatPresenter.sendMessage(inputText.getText().toString());
+            final Toast message = Toast.makeText(getBaseContext(), inputText.getText().toString(), Toast.LENGTH_LONG);
+            this.inputText.setText("");
+            message.show();
+        }
+    }
+
+    @OnClick(R.id.input_text)
+    public void onInputTextClick(final View view) {
+        if (this.isAttachmentActionShown) {
+            this.hide(this.attachmentActionsGridView);
+        }
+
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT, this.softInputResultReceiver);
     }
 
     private void hide(final View view) {
@@ -182,7 +242,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 break;
             default:
                 break;
-
         }
     }
 

@@ -28,6 +28,26 @@
             android:clickable="true"
             android:padding="4dp"
             android:src="@drawable/ic_editor_attach_file" />
+
+        <EditText
+            android:id="@+id/input_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
+            android:isScrollContainer="true"
+            android:imeOptions=""
+            android:maxLines="3"
+            android:minHeight="?attr/actionBarSize"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/btn_send"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:src="@drawable/ic_action_done" />
     </LinearLayout>
 
     <com.jelly.spike.attachment.view.ActionIconGridView
