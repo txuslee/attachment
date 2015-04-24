@@ -1,9 +1,8 @@
 package com.jelly.spike.attachment;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,10 +11,11 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.AdapterView;
 
 import com.jelly.spike.attachment.adapter.impl.AttachmentIconAdapter;
 import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
-import com.jelly.spike.attachment.listener.animator.SimpleAnimatorListener;
+import com.jelly.spike.attachment.adapter.model.AttachmentActionType;
 import com.jelly.spike.attachment.view.ActionIconGridView;
 
 import butterknife.ButterKnife;
@@ -23,7 +23,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -92,6 +92,7 @@ public class MainActivity extends ActionBarActivity {
         // Number of columns has not been set yet until onStart
         final RowDependentIconAdapter adapter = new RowDependentIconAdapter(new AttachmentIconAdapter(this), 2);
         this.attachmentActionsGridView.setAdapter(adapter);
+        this.attachmentActionsGridView.setOnItemClickListener(this);
         this.attachmentActionsGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -139,52 +140,11 @@ public class MainActivity extends ActionBarActivity {
     @OnClick(R.id.btn_attachFile)
     public void onAttachmentClick(final View view) {
         if (this.isAttachmentActionShown) {
-            //this.hide(this.attachmentActionsGridView);
-            //this.collapse(this.attachmentActionsGridView);
-            this.hideAttachmentActions();
+            this.attachmentActionsGridView.collapse();
         } else {
-            //this.reveal(this.attachmentActionsGridView);
-            //this.expand(this.attachmentActionsGridView);
-            this.revealAttachmentActions();
+            this.attachmentActionsGridView.expand();
         }
         this.isAttachmentActionShown = !this.isAttachmentActionShown;
-    }
-
-    private void hideAttachmentActions() {
-        final int height = this.attachmentActionsGridView.getHeight();
-        final ValueAnimator animator = slideAnimator(height, 0);
-        animator.addListener(new SimpleAnimatorListener() {
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                hide(attachmentActionsGridView);
-            }
-        });
-        animator.start();
-    }
-
-    private void revealAttachmentActions() {
-        this.reveal(this.attachmentActionsGridView);
-        final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        final int heightSpec = View.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, View.MeasureSpec.AT_MOST);
-        this.attachmentActionsGridView.measure(widthSpec, heightSpec);
-
-        final ValueAnimator animator = slideAnimator(0, this.attachmentActionsGridView.getMeasuredHeight());
-        animator.start();
-    }
-
-    private ValueAnimator slideAnimator(int start, int end) {
-        final ValueAnimator animator = ValueAnimator.ofInt(start, end);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //Update height
-                final int value = (Integer) valueAnimator.getAnimatedValue();
-                final ViewGroup.LayoutParams layoutParams = attachmentActionsGridView.getLayoutParams();
-                layoutParams.height = value;
-                attachmentActionsGridView.setLayoutParams(layoutParams);
-            }
-        });
-        return animator;
     }
 
     private void hide(final View view) {
@@ -200,4 +160,30 @@ public class MainActivity extends ActionBarActivity {
         }
         view.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void onItemClick(final AdapterView<?> parent, final View view, int position, long id) {
+        final AttachmentActionType type = (AttachmentActionType) parent.getItemAtPosition(position);
+        switch (type) {
+            case PhotoAttachment:
+                Log.d(TAG, "Camera image click");
+                break;
+            case VideoAttachment:
+                Log.d(TAG, "Camera video click");
+                break;
+            case GalleryAttachment:
+                Log.d(TAG, "Gallery click");
+                break;
+            case LocationAttachment:
+                Log.d(TAG, "Location click");
+                break;
+            case DocumentAttachment:
+                Log.d(TAG, "Document click");
+                break;
+            default:
+                break;
+
+        }
+    }
+
 }

@@ -10,7 +10,7 @@ public enum AttachmentActionType {
     VideoAttachment(R.drawable.selector_attach_camera_image),
     GalleryAttachment(R.drawable.selector_attach_gallery),
     LocationAttachment(R.drawable.selector_attach_location),
-    FileAttachment(R.drawable.selector_attach_document);
+    DocumentAttachment(R.drawable.selector_attach_document);
 
     private final int resourceId;
 

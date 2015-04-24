@@ -1,14 +1,18 @@
 package com.jelly.spike.attachment.view;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.GridView;
 
 import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
+import com.jelly.spike.attachment.listener.animator.SimpleAnimatorListener;
 
 public class ActionIconGridView extends GridView {
 
@@ -75,7 +79,6 @@ public class ActionIconGridView extends GridView {
 
         final RowDependentIconAdapter adapter = (RowDependentIconAdapter) this.getAdapter();
         if (adapter != null) {
-            final int rowCount = adapter.getRowCount();
             // Changed (false) means original size in layout editor
             if (this.forcedLayout) {
                 this.updateIconDimensionPixelSize(adapter);
@@ -107,5 +110,43 @@ public class ActionIconGridView extends GridView {
         } else {
             observer.removeOnGlobalLayoutListener(layoutListener);
         }
+    }
+
+    public void collapse() {
+        final int height = this.getHeight();
+        final ValueAnimator animator = this.layoutHeightAnimator(height, 0);
+        animator.addListener(new SimpleAnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                setVisibility(GONE);
+            }
+        });
+        animator.start();
+    }
+
+    private ValueAnimator layoutHeightAnimator(int start, int end) {
+        final ValueAnimator animator = ValueAnimator.ofInt(start, end);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                //Update height
+                final int value = (Integer) valueAnimator.getAnimatedValue();
+                final ViewGroup.LayoutParams layoutParams = getLayoutParams();
+                layoutParams.height = value;
+                setLayoutParams(layoutParams);
+            }
+        });
+        return animator;
+    }
+
+    public void expand() {
+        this.setVisibility(VISIBLE);
+
+        final int widthSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        final int heightSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
+        this.measure(widthSpec, heightSpec);
+
+        final ValueAnimator animator = layoutHeightAnimator(0, getMeasuredHeight());
+        animator.start();
     }
 }
