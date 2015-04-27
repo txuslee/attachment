@@ -7,22 +7,43 @@ import android.view.inputmethod.InputMethodManager;
 
 public class SoftInputResultReceiver extends ResultReceiver {
 
-    private boolean isSoftInputShown;
+    private final SoftInputReceiverListener listener;
+    private int resultCode;
 
     public SoftInputResultReceiver(final Handler handler) {
+        this(handler, null);
+    }
+
+    public SoftInputResultReceiver(Handler handler, SoftInputReceiverListener listener) {
         super(handler);
+        this.resultCode = InputMethodManager.RESULT_UNCHANGED_HIDDEN;
+        this.listener = listener;
     }
 
     @Override
     protected void onReceiveResult(int resultCode, final Bundle resultData) {
-        if ((resultCode == InputMethodManager.RESULT_SHOWN) || (resultCode == InputMethodManager.RESULT_UNCHANGED_SHOWN)) {
-            this.isSoftInputShown = true;
-        } else if ((resultCode == InputMethodManager.RESULT_HIDDEN) || (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN)) {
-            this.isSoftInputShown = false;
+        this.resultCode = resultCode;
+        if (this.listener != null) {
+            if (resultCode == InputMethodManager.RESULT_SHOWN) {
+                this.listener.onSoftInputOpen();
+            } else if (resultCode == InputMethodManager.RESULT_HIDDEN) {
+                this.listener.onSoftInputClose();
+            } else {
+                //(resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN)
+                this.listener.onSoftInputUnchanged(resultCode == InputMethodManager.RESULT_UNCHANGED_SHOWN);
+            }
         }
     }
 
     public boolean isSoftInputShown() {
-        return this.isSoftInputShown;
+        return (this.resultCode == InputMethodManager.RESULT_SHOWN) || (this.resultCode == InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
+
+    public interface SoftInputReceiverListener {
+        void onSoftInputUnchanged(boolean isOpen);
+
+        void onSoftInputOpen();
+
+        void onSoftInputClose();
     }
 }
