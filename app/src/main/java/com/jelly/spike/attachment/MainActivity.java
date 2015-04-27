@@ -34,6 +34,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    @InjectView(R.id.main_lyt_root)
+    protected ViewGroup root;
+
     @InjectView(R.id.lyt_attach_action)
     protected ActionIconGridView attachmentActionsGridView;
 
@@ -150,9 +153,11 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         this.inputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(final View view, boolean hasFocus) {
-                final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(inputText.getWindowToken(), 0);
-                //onInputTextClick(inputText);
+                if ((view == inputText) && (!hasFocus)) {
+                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(inputText.getWindowToken(), 0);
+                    //onInputTextClick(inputText);
+                }
             }
         });
     }
@@ -173,16 +178,22 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     @OnClick(R.id.btn_attachFile)
     public void onAttachmentClick(final View view) {
-        if (this.softInputResultReceiver.isSoftInputShown()) {
+        //final View content = LayoutInflater.from(this).inflate(R.layout.item_chat_action, null, false);
+        //final PopupWindow popup = new PopupWindow(content, ViewGroup.LayoutParams.MATCH_PARENT, 250/*ViewGroup.LayoutParams.WRAP_CONTENT*/, false);
+        //popup.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+        //popup.showAtLocation(this.inputText, Gravity.BOTTOM, 0, 0);
+
+        //if (this.softInputResultReceiver.isSoftInputShown())
+        {
             final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(inputText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, this.softInputResultReceiver);
+            imm.hideSoftInputFromWindow(inputText.getWindowToken(), 0, this.softInputResultReceiver);
         }
 
-//        if (this.isAttachmentActionShown) {
-//            this.attachmentActionsGridView.collapse();
-//        } else {
-//            this.attachmentActionsGridView.expand();
-//        }
+        if (this.isAttachmentActionShown) {
+            this.attachmentActionsGridView.collapse();
+        } else {
+            this.attachmentActionsGridView.expand();
+        }
         this.isAttachmentActionShown = !this.isAttachmentActionShown;
     }
 
