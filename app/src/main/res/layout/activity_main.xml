@@ -51,7 +51,7 @@
             android:src="@drawable/ic_action_done" />
     </LinearLayout>
 
-    <com.jelly.spike.attachment.view.ActionIconGridView
+    <com.jelly.spike.attachment.view.ExpandableGridView
         android:id="@+id/lyt_attach_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

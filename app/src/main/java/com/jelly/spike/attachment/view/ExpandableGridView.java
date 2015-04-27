@@ -14,7 +14,7 @@ import android.widget.GridView;
 import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
 import com.jelly.spike.attachment.listener.animator.SimpleAnimatorListener;
 
-public class ActionIconGridView extends GridView {
+public class ExpandableGridView extends GridView {
 
     private static final int DEFAULT_SPACING = 0;
 
@@ -29,22 +29,22 @@ public class ActionIconGridView extends GridView {
     private int verticalSpacing;
     private int columnCount;
 
-    public ActionIconGridView(final Context context) {
+    public ExpandableGridView(final Context context) {
         super(context);
     }
 
-    public ActionIconGridView(final Context context, final AttributeSet attrs) {
+    public ExpandableGridView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.initialize(attrs);
     }
 
-    public ActionIconGridView(final Context context, final AttributeSet attrs, int defStyleAttr) {
+    public ExpandableGridView(final Context context, final AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.initialize(attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ActionIconGridView(final Context context, final AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ExpandableGridView(final Context context, final AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.initialize(attrs);
     }

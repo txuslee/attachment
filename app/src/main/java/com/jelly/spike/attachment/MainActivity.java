@@ -23,7 +23,7 @@ import com.jelly.spike.attachment.adapter.impl.AttachmentIconAdapter;
 import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
 import com.jelly.spike.attachment.adapter.model.AttachmentActionType;
 import com.jelly.spike.attachment.input.SoftInputResultReceiver;
-import com.jelly.spike.attachment.view.ActionIconGridView;
+import com.jelly.spike.attachment.view.ExpandableGridView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -38,7 +38,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     protected ViewGroup root;
 
     @InjectView(R.id.lyt_attach_action)
-    protected ActionIconGridView attachmentActionsGridView;
+    protected ExpandableGridView attachmentActionsGridView;
 
     @InjectView(R.id.input_text)
     protected EditText inputText;
