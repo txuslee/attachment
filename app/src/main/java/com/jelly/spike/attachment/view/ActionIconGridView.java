@@ -136,6 +136,7 @@ public class ActionIconGridView extends GridView {
                 setLayoutParams(layoutParams);
             }
         });
+        animator.setDuration(100);
         return animator;
     }
 
