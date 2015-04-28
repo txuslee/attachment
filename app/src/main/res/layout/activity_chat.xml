@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lyt_chat_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jelly.spike.attachment.ChatActivity">
+
+    <LinearLayout
+        android:id="@+id/lyt_chat_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:animateLayoutChanges="true"
+        android:background="#0077CD"
+        android:minHeight="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <ImageView
+            android:id="@+id/btn_attachFile"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="4dp"
+            android:src="@drawable/ic_editor_attach_file" />
+
+        <EditText
+            android:id="@+id/edt_chat_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
+            android:isScrollContainer="true"
+            android:maxLines="3"
+            android:minHeight="?attr/actionBarSize"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <!--FrameLayout
+        android:id="@+id/lyt_chat_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lyt_chat_input"
+        android:layout_marginTop="-6dp"
+        android:background="@drawable/ic_attach_action_layout"/-->
+
+</RelativeLayout>

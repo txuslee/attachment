@@ -31,11 +31,7 @@ public class SoftInputState implements ViewTreeObserver.OnGlobalLayoutListener {
 
     @Override
     public void onGlobalLayout() {
-        final Rect rect = new Rect();
-        //rect will be populated with the coordinates of your view that area still visible.
-        root.getWindowVisibleDisplayFrame(rect);
-
-        final int heightDiff = root.getRootView().getHeight() - (rect.bottom - rect.top);
+        final int heightDiff = root.getRootView().getHeight() - (root.getHeight());
         if (!isSoftKeyboardOpened && heightDiff > MIN_SOFT_INPUT_HEIGHT) { // if more than 100 pixels, its probably a keyboard...
             isSoftKeyboardOpened = true;
             notifyOnSoftKeyboardOpened(heightDiff);

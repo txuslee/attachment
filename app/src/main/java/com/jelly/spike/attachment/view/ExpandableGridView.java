@@ -136,7 +136,7 @@ public class ExpandableGridView extends GridView {
                 setLayoutParams(layoutParams);
             }
         });
-        animator.setDuration(100);
+        //animator.setDuration(100);
         return animator;
     }
 

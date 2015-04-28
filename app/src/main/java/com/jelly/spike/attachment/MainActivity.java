@@ -1,10 +1,14 @@
 package com.jelly.spike.attachment;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +20,9 @@ import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.jelly.spike.attachment.adapter.impl.AttachmentIconAdapter;
@@ -24,6 +30,7 @@ import com.jelly.spike.attachment.adapter.impl.RowDependentIconAdapter;
 import com.jelly.spike.attachment.adapter.model.AttachmentActionType;
 import com.jelly.spike.attachment.input.SoftInputResultReceiver;
 import com.jelly.spike.attachment.view.ExpandableGridView;
+import com.jelly.spike.attachment.view.FrameLayoutFixed;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -110,11 +117,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         final RowDependentIconAdapter adapter = new RowDependentIconAdapter(new AttachmentIconAdapter(this), 2);
         this.attachmentActionsGridView.setAdapter(adapter);
         this.attachmentActionsGridView.setOnItemClickListener(this);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         this.attachmentActionsGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 // Remove layout listener before any other layout action is taken
                 attachmentActionsGridView.removeOnGlobalLayoutListener(this);
+
+                final int heightDiff = root.getRootView().getHeight()- root.getHeight();
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
                 // Hide it here instead of doing it in layout file to force layout calculation on load
                 hide(attachmentActionsGridView);
             }
